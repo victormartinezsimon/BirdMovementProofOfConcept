@@ -33,19 +33,19 @@ public class SteeringBehaviour {
 		return force;
 	}
 
-	public float rotation(Transform origin, List<Transform> others) {
+	public Vector3 rotation(Vector3 origin, List<Vector3> othersVelocities) {
 
-		float finalRotation = 0;
+		Vector3 finalRotation = Vector3.zero;
 
-		for(int i = 0; i < others.Count; i++) {
-			finalRotation += others[i].eulerAngles.z;
+		for(int i = 0; i < othersVelocities.Count; i++) {
+			finalRotation += othersVelocities[i];
 		}
 
-		if(others.Count != 0) {
-			finalRotation = finalRotation / others.Count;
+		if(othersVelocities.Count != 0) {
+			finalRotation = finalRotation / othersVelocities.Count;
 		}
 
-		return finalRotation - origin.eulerAngles.z;
+		return finalRotation - origin;
 	}
 	public Vector3 cohesion (Transform origin, List<Transform> others, Vector3 actualVelocity, float maxVelocity) {
 
