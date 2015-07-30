@@ -18,9 +18,19 @@ public class Movement : MonoBehaviour {
 	[HideInInspector]
 	public List<Movement> m_listaBirds;
 
+	public float m_distance = 4;
+
+	private SteeringBehaviour m_steering;
+
+	public bool m_separation;
+	public bool m_cohesion;
+	public bool m_orientation;
+	public bool m_constant;
+
 	// Use this for initialization
 	void Start () {
-		m_velocity = initialVelocity;
+		m_velocity = Vector3.zero;
+		m_steering = new SteeringBehaviour();
 	}
 	
 	// Update is called once per frame
@@ -60,8 +70,53 @@ public class Movement : MonoBehaviour {
 		}
 	}
 
+	private Vector3 m_constantForce() {
+
+		float degrees = transform.rotation.eulerAngles.z;
+
+		float x = Mathf.Cos(Mathf.Deg2Rad * degrees);
+		float y = Mathf.Sin(Mathf.Deg2Rad * degrees);
+
+		Vector3 toReturn = new Vector3(x,y,0);
+
+
+		return toReturn.normalized;
+	}
+
 	private Vector3 calculateSteeringForce() {
-		Vector3 v1 = Vector3.up;
+		Vector3 v1 = Vector3.zero;
+
+		List<Transform> transforms = new List<Transform>();
+		List<Vector3> velocities = new List<Vector3>();
+
+		for(int i = 0; i < m_listaBirds.Count; i++) {
+			if(m_listaBirds[i] != this) {
+				float distance = (m_listaBirds[i].transform.position - this.transform.position).magnitude;
+				if(m_distance >= distance) {
+					transforms.Add(m_listaBirds[i].transform);
+					velocities.Add(m_listaBirds[i].getVelocity());
+				}
+			}
+		}
+
+		Vector3 separation = m_steering.separation(this.transform,transforms);
+		Vector3 cohesion = m_steering.cohesion(this.transform,transforms,m_velocity,maxVelocity);
+		Vector3 orientation = m_steering.rotation(getVelocity(),velocities);
+		Vector3 constant = m_constantForce();
+
+		if(m_separation) {
+			v1 += separation;
+		}
+		if(m_cohesion) {
+			v1 += cohesion;
+		}
+		if(m_cohesion) {
+			v1 += orientation;
+		}
+		if(m_constant) {
+			v1+= constant;
+		}
+
 		return v1;
 	}
 
