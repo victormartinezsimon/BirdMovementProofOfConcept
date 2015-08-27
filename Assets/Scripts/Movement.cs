@@ -29,14 +29,16 @@ public class Movement : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		m_velocity = Vector3.zero;
+		m_velocity = getAngle();
 		m_steering = new SteeringBehaviour();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		Vector3 force = calculateSteeringForce();
-		
+		if(force.magnitude <= 0.1f) {
+			force = getAngle();
+		}
 		//f = m * a;
 		Vector3 aceleration = force / mase;
 		
@@ -45,8 +47,6 @@ public class Movement : MonoBehaviour {
 		
 		//new Vel
 		m_velocity += deltaVel;
-
-		
 		//truncate vel
 		if( m_velocity.magnitude >= maxVelocity) {
 			m_velocity -= deltaVel;
@@ -68,19 +68,30 @@ public class Movement : MonoBehaviour {
 		if( transform.localPosition.y > limitY[1]) {
 			transform.localPosition = new Vector3(transform.localPosition.x,limitY[0],transform.localPosition.z);
 		}
+
+		Debug.DrawLine(this.transform.position,this.transform.position + getAngle(), Color.red);
+
+		//I know the velocity -> rotate go
+//		transform.rotation = Quaternion.Euler(new );
+		float newAngle = Mathf.Atan2(m_velocity.y, m_velocity.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(new Vector3(0,0,newAngle));	
+	}
+
+	private Vector3 getAngle() {
+		float degrees = transform.rotation.eulerAngles.z;
+		
+		float x = Mathf.Cos(Mathf.Deg2Rad * degrees);
+		float y = Mathf.Sin(Mathf.Deg2Rad * degrees);
+		
+		Vector3 toReturn = new Vector3(x,y,0);
+		
+		
+		return toReturn.normalized;
 	}
 
 	private Vector3 m_constantForce() {
 
-		float degrees = transform.rotation.eulerAngles.z;
-
-		float x = Mathf.Cos(Mathf.Deg2Rad * degrees);
-		float y = Mathf.Sin(Mathf.Deg2Rad * degrees);
-
-		Vector3 toReturn = new Vector3(x,y,0);
-
-
-		return toReturn.normalized;
+		return getAngle();
 	}
 
 	private Vector3 calculateSteeringForce() {
@@ -123,4 +134,5 @@ public class Movement : MonoBehaviour {
 	public Vector3 getVelocity() {
 		return m_velocity;
 	}
+
 }
