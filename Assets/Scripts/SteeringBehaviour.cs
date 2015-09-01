@@ -16,9 +16,37 @@ public class SteeringBehaviour {
 		
 		return desiredVelocity - actualVelocity;
 	}
+	private Vector3 Seek(Vector3 origin, Vector3 destiny, Vector3 actualVelocity, float maxVelocity) {
+		Vector3 desiredVelocity = (destiny - origin).normalized * maxVelocity;
+		
+		return desiredVelocity - actualVelocity;
+	}
+	private Vector3 Seek(Vector3 origin, Transform destiny, Vector3 actualVelocity, float maxVelocity) {
+		Vector3 desiredVelocity = (destiny.position - origin).normalized * maxVelocity;
+		
+		return desiredVelocity - actualVelocity;
+	}
 
 	public Vector3 flee(Transform origin, Transform destiny, Vector3 actualVelocity, float maxVelocity) {
 		Vector3 desiredVelocity = (origin.position - destiny.position).normalized * maxVelocity;
+		
+		return desiredVelocity - actualVelocity;
+	}
+
+	public Vector3 flee(Transform origin, Vector3 destiny, Vector3 actualVelocity, float maxVelocity) {
+		Vector3 desiredVelocity = (origin.position - destiny).normalized * maxVelocity;
+		
+		return desiredVelocity - actualVelocity;
+	}
+
+	public Vector3 flee(Vector3 origin, Vector3 destiny, Vector3 actualVelocity, float maxVelocity) {
+		Vector3 desiredVelocity = (origin - destiny).normalized * maxVelocity;
+		
+		return desiredVelocity - actualVelocity;
+	}
+
+	public Vector3 flee(Vector3 origin, Transform destiny, Vector3 actualVelocity, float maxVelocity) {
+		Vector3 desiredVelocity = (origin - destiny.position).normalized * maxVelocity;
 		
 		return desiredVelocity - actualVelocity;
 	}

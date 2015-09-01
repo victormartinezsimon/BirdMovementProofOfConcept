@@ -27,6 +27,10 @@ public class Movement : MonoBehaviour {
 	public bool m_orientation;
 	public bool m_constant;
 
+	public bool m_avoid;
+
+	public bool debug = true;
+
 	// Use this for initialization
 	void Start () {
 		m_velocity = getAngle();
@@ -36,9 +40,9 @@ public class Movement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Vector3 force = calculateSteeringForce();
-		if(force.magnitude <= 0.1f) {
-			force = getAngle();
-		}
+//		if(force.magnitude <= 0.1f) {
+//			force = getAngle();
+//		}
 		//f = m * a;
 		Vector3 aceleration = force / mase;
 		
@@ -69,7 +73,15 @@ public class Movement : MonoBehaviour {
 			transform.localPosition = new Vector3(transform.localPosition.x,limitY[0],transform.localPosition.z);
 		}
 
-		Debug.DrawLine(this.transform.position,this.transform.position + getAngle(), Color.red);
+		if(debug) {
+			Debug.DrawLine(this.transform.position, this.transform.position + force, Color.green);
+			Debug.DrawLine(this.transform.position, this.transform.position + m_velocity, Color.blue);
+		}
+
+		if(Input.GetKeyDown(KeyCode.D)) {
+			debug = !debug;
+		}
+		
 
 		//I know the velocity -> rotate go
 //		transform.rotation = Quaternion.Euler(new );
@@ -115,6 +127,14 @@ public class Movement : MonoBehaviour {
 		Vector3 orientation = m_steering.rotation(getVelocity(),velocities);
 		Vector3 constant = m_constantForce();
 
+		Vector3 avoidMouse = Vector3.zero;
+		if(m_avoid) {
+			if(Input.GetMouseButtonDown(0)) {
+				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+				avoidMouse = m_steering.flee(this.transform, pos, m_velocity, maxVelocity);
+			}
+		}
+
 		if(m_separation) {
 			v1 += separation;
 		}
@@ -126,6 +146,10 @@ public class Movement : MonoBehaviour {
 		}
 		if(m_constant) {
 			v1+= constant;
+		}
+
+		if(m_avoid) {
+			v1+= avoidMouse;
 		}
 
 		return v1;
