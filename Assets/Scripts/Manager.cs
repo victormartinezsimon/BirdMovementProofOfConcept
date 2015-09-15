@@ -13,6 +13,11 @@ public class Manager : MonoBehaviour {
 
 	public GameObject prefab;
 
+	public GameObject m_wallUp;
+	public GameObject m_wallDown;
+	public GameObject m_wallLeft;
+	public GameObject m_wallRight;
+
 	// Use this for initialization
 	void Start () {
 		populate();
@@ -30,8 +35,15 @@ public class Manager : MonoBehaviour {
 			go.transform.position= new Vector3(Random.Range(limitX[0],limitX[1]),Random.Range(limitY[0],limitY[1]),0);
 			go.transform.rotation = Quaternion.Euler(new Vector3(0,0,Random.Range(0,360)));
 
-			go.GetComponent<Movement>().limitX = limitX;
-			go.GetComponent<Movement>().limitY = limitY;
+			//initialization
+			Movement mv = go.GetComponent<Movement>();
+			mv.limitX = limitX;
+			mv.limitY = limitY;
+			mv.m_wallDown = m_wallDown;
+			mv.m_wallUp = m_wallUp;
+			mv.m_wallLeft = m_wallLeft;
+			mv.m_wallRight = m_wallRight;
+
 
 			m_listaGO.Add(go.transform.GetComponent<Movement>());
 

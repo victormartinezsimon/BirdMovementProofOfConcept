@@ -17,17 +17,25 @@ public class Movement : MonoBehaviour {
 	public Vector3 initialVelocity;
 	[HideInInspector]
 	public List<Movement> m_listaBirds;
+	[HideInInspector]
+	public GameObject m_wallUp;
+	[HideInInspector]
+	public GameObject m_wallDown;
+	[HideInInspector]
+	public GameObject m_wallLeft;
+	[HideInInspector]
+	public GameObject m_wallRight;
 
 	public float m_distance = 4;
 
 	private SteeringBehaviour m_steering;
 
-	public bool m_separation;
-	public bool m_cohesion;
-	public bool m_orientation;
-	public bool m_constant;
-
-	public bool m_avoid;
+	public float m_separation = 1;
+	public float m_cohesion = 1;
+	public float m_orientation = 1;
+	public float m_constant = 1;
+	public float m_avoid = 10;
+	public float m_wallAvoid = 1;
 
 	public bool debug = true;
 
@@ -128,29 +136,45 @@ public class Movement : MonoBehaviour {
 		Vector3 constant = m_constantForce();
 
 		Vector3 avoidMouse = Vector3.zero;
-		if(m_avoid) {
+		if(m_avoid != 0.0f) {
 			if(Input.GetMouseButtonDown(0)) {
 				Vector3 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 				avoidMouse = m_steering.flee(this.transform, pos, m_velocity, maxVelocity);
 			}
 		}
 
-		if(m_separation) {
-			v1 += separation;
+		//avoid walls
+		Vector3 nextPos = this.transform.position +  m_velocity * Time.deltaTime;
+		Vector3 walls = Vector3.zero;
+		if(nextPos.y + m_distance > m_wallUp.transform.position.y) {
+			Vector3 destiny = nextPos;
+			destiny.y += m_distance;
+			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
 		}
-		if(m_cohesion) {
-			v1 += cohesion;
+		if(nextPos.y - m_distance < m_wallDown.transform.position.y) {
+			Vector3 destiny = nextPos;
+			destiny.y -= m_distance;
+			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
 		}
-		if(m_cohesion) {
-			v1 += orientation;
+		if(nextPos.x + m_distance > m_wallRight.transform.position.x) {
+			Vector3 destiny = nextPos;
+			destiny.x += m_distance;
+			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
 		}
-		if(m_constant) {
-			v1+= constant;
+		if(nextPos.x - m_distance < m_wallLeft.transform.position.x) {
+			Vector3 destiny = nextPos;
+			destiny.x -= m_distance;
+			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
 		}
 
-		if(m_avoid) {
-			v1+= avoidMouse;
-		}
+
+		v1 += separation *  m_separation;
+		v1 += cohesion * m_cohesion;
+		v1 += orientation * m_cohesion;
+		v1 += constant * m_constant;
+		v1 += avoidMouse * m_avoid;
+		v1 += walls * m_wallAvoid;
+
 
 		return v1;
 	}
