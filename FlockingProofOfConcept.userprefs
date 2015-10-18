@@ -1,0 +1,14 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Movement.cs">
+    <Files>
+      <File FileName="..\..\..\Downloads\flocking-test-master\flocking-test-master.sln" Line="1" Column="1" />
+      <File FileName="..\..\..\Downloads\flocking-test-master\Assets\Scripts\Boid.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Movement.cs" Line="150" Column="10" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

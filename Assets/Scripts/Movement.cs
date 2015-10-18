@@ -150,21 +150,25 @@ public class Movement : MonoBehaviour {
 			Vector3 destiny = nextPos;
 			destiny.y += m_distance;
 			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
+//			walls = new Vector3(0,-1,0);
 		}
 		if(nextPos.y - m_distance < m_wallDown.transform.position.y) {
 			Vector3 destiny = nextPos;
 			destiny.y -= m_distance;
 			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
+//			walls = new Vector3(0,1,0);
 		}
 		if(nextPos.x + m_distance > m_wallRight.transform.position.x) {
 			Vector3 destiny = nextPos;
 			destiny.x += m_distance;
 			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
+//			walls = new Vector3(-1,0,0);
 		}
 		if(nextPos.x - m_distance < m_wallLeft.transform.position.x) {
 			Vector3 destiny = nextPos;
 			destiny.x -= m_distance;
 			walls= m_steering.flee(this.transform.position, destiny, m_velocity, maxVelocity);
+//			walls = new Vector3(1,0,0);
 		}
 
 
